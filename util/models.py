@@ -57,15 +57,16 @@ TOKENIZER_CLASSES = {
 }
 
 
-def get_model(task, model_type, model_name):
-    if task == "intent":
-        model_class = INTENT_MODEL_CLASSES[model_type]
-    elif task == "entity":
-        model_class = ENTITY_MODEL_CLASSES[model_type]
-    else:
-        raise NotImplementedError(model_type)
+def get_intent_model(model_type, model_name, num_intents):
+    model_class = INTENT_MODEL_CLASSES[model_type]
+    model = model_class.from_pretrained(model_name, num_labels=num_intents)
 
+    return model
+
+def get_entity_model(model_type, model_name):
+    model_class = ENTITY_MODEL_CLASSES[model_type]
     model = model_class.from_pretrained(model_name)
+
     return model
 
 def get_tokenizer(model_type, model_name, do_lower_case):
