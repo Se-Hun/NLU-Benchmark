@@ -45,7 +45,6 @@ ENTITY_MODEL_CLASSES = {
     "xlm": XLMForTokenClassification,
     "electra": ElectraForTokenClassification
 }
-
 TOKENIZER_CLASSES = {
     "bert": BertTokenizer,
     "distilbert": DistilBertTokenizer,
@@ -63,9 +62,9 @@ def get_intent_model(model_type, model_name, num_intents):
 
     return model
 
-def get_entity_model(model_type, model_name):
+def get_entity_model(model_type, model_name, num_entities):
     model_class = ENTITY_MODEL_CLASSES[model_type]
-    model = model_class.from_pretrained(model_name)
+    model = model_class.from_pretrained(model_name, num_labels=num_entities)
 
     return model
 
