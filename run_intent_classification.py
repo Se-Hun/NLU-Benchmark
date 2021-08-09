@@ -5,7 +5,6 @@ import argparse
 from glob import glob
 
 from transformers import AdamW, get_linear_schedule_with_warmup
-from sklearn import metrics
 
 import torch
 from pytorch_lightning import LightningModule, Trainer, seed_everything
@@ -127,7 +126,7 @@ class IntentClassifier(LightningModule):
             print("Result file is dumped at ", result_file)
 
         print(json.dumps(results, indent=4))
-        return {"test_acc": test_acc}
+        return results
 
     def configure_optimizers(self):
         no_decay = ['bias', 'LayerNorm.weight']
@@ -170,12 +169,12 @@ def main():
                         help="The maximum total input sequence length after WordPiece tokenization. Sequences "
                              "longer than this will be truncated, and sequences shorter than this will be padded.")
 
-    parser.add_argument("--num_train_epochs", default=10, type=int, help="epochs at train time.")
-    parser.add_argument("--batch_size", default=32, type=int, help="batch size")
+    parser.add_argument("--num_train_epochs", default=10, type=int, help="Epochs at train time.")
+    parser.add_argument("--batch_size", default=32, type=int, help="Batch size")
     parser.add_argument("--gpu_id", type=str, default="0",
-                        help="gpu device id.")
+                        help="Gpu device id.")
 
-    parser.add_argument("--seed", default=42, type=int, help="Seed Number")
+    parser.add_argument("--seed", default=42, type=int, help="Seed number")
 
     parser = Trainer.add_argparse_args(parser)
     parser = IntentClassifier.add_model_specific_args(parser)
@@ -195,7 +194,7 @@ def main():
     num_intents = dm.num_intents
 
     # load Callbacks and Loggers
-    model_dir = './model/{}/{}'.format(args.data_name, args.model_name.replace("/", "-"))
+    model_dir = './model/{}/{}/{}'.format(args.data_name, "intent", args.model_name.replace("/", "-"))
     model_checkpoint_callback = ModelCheckpoint(
         monitor='val_acc', # or 'val_loss'
         mode='max', # or 'min'
