@@ -52,7 +52,7 @@ class IntentClassifier(LightningModule):
             "labels": batch[3]
         }
 
-        if self.hparams.model_type in ["distilbert"]:
+        if self.hparams.model_type in ["distilbert", "roberta"]:
             del inputs["token_type_ids"] # Distilbert don't use segment_ids.
 
         outputs = self(inputs)
@@ -69,7 +69,7 @@ class IntentClassifier(LightningModule):
             "labels": batch[3]
         }
 
-        if self.hparams.model_type in ["distilbert"]:
+        if self.hparams.model_type in ["distilbert", "roberta"]:
             del inputs["token_type_ids"]  # Distilbert don't use segment_ids.
 
         outputs = self(inputs)
@@ -100,7 +100,7 @@ class IntentClassifier(LightningModule):
             "labels": batch[3]
         }
 
-        if self.hparams.model_type in ["distilbert"]:
+        if self.hparams.model_type in ["distilbert", "roberta"]:
             del inputs["token_type_ids"]  # Distilbert don't use segment_ids.
 
         outputs = self(inputs)
@@ -196,10 +196,10 @@ def main():
     # load Callbacks and Loggers
     model_dir = './model/{}/{}/{}'.format(args.data_name, "intent", args.model_name.replace("/", "-"))
     model_checkpoint_callback = ModelCheckpoint(
-        monitor='val_acc', # or 'val_loss'
-        mode='max', # or 'min'
+        monitor='val_loss',
+        mode='min',
         dirpath=model_dir,
-        filename='{epoch:02d}-{val_loss:.2f}'
+        filename='{epoch:02d}-{val_loss:.3f}'
     )
 
     tensorboard_logger = TensorBoardLogger(

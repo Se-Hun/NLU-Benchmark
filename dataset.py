@@ -55,12 +55,20 @@ class IntentClassificationDataset(Dataset):
                 tokens = tokenizer(text, padding='max_length', max_length=max_seq_length, truncation=True)
             intent_id = intent_vocab[intent]
 
-            feature = {
-                "input_ids" : tokens["input_ids"],
-                "token_type_ids" : tokens["token_type_ids"],
-                "attention_mask" : tokens["attention_mask"],
-                "intent_id" : intent_id
-            }
+            if "token_type_ids" in tokens.keys():
+                feature = {
+                    "input_ids" : tokens["input_ids"],
+                    "token_type_ids" : tokens["token_type_ids"],
+                    "attention_mask" : tokens["attention_mask"],
+                    "intent_id" : intent_id
+                }
+            else:
+                feature = {
+                    "input_ids": tokens["input_ids"],
+                    "attention_mask": tokens["attention_mask"],
+                    "intent_id": intent_id
+                }
+                feature.update({"token_type_ids": [0]})
             features.append(feature)
 
         self.features = features
