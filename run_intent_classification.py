@@ -28,11 +28,11 @@ class IntentClassifier(LightningModule):
         `IntentClassifier` run intent classification.
 
         Args:
-            data_name (str):
-            model_type (str):
-            model_name (str):
-            num_intents (int):
-            learning_rate (float, optional):
+            data_name (str): dataset name.
+            model_type (str): model type, e.g., `bert`
+            model_name (str): model name, e.g., `bert-base-cased`
+            num_intents (int): number of intents.
+            learning_rate (float, optional): learning rate for optimizer. defaults to 5e-5.
         """
         super().__init__()
         self.save_hyperparameters()
