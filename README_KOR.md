@@ -1,11 +1,11 @@
 # NLU-Benchmark : Natural Language Understanding Benchmark
 
-[Korean(한국어)](./README_KOR.md)
+[English(영어)](./README.md)
 
-**NLU-Benchmark** support natural language understanding experimental code for Close Domain chatbot or Task-Oriented artificial intelligence assistant system. Experiments provided by **NLU-Benchmark** include:
+**NLU-Benchmark**는 Close Domain 챗봇 또는 Task-Oriented 인공지능 비서 시스템을 위한 자연어 이해 실험 코드를 제공합니다. **NLU-Benchmark**에서 제공하는 실험은 다음과 같습니다.
 
-* Intent Classification : classify intent of the utterance or sentence
-* Entity Recognition : extract entity information from utterance or sentence
+* 의도 분류(Intent Classification) : 발화문이 어떠한 의도를 담고 있는지 분류
+* 엔터티 인식(Entity Recognition) : 발화문에서의 엔터티 정보 추출
 
 ---
 
@@ -13,7 +13,7 @@
 
 ---
 
-**NLU-Benchmark** is implemented based on Huggingface and PyTorch Lightning, and supports experiments with various language models.
+**NLU-Benchmark**는 Hugginface와 PyTorch Lightning을 기반으로 코드가 작성되었으며, 다양한 언어 모델들에 대한 실험을 지원합니다.
 
 ## Dependencies
 * torch==1.9.0
@@ -25,43 +25,43 @@
 * seqeval
 
 ## Usage
-### 1. Download Dataset
-**NLU-Benchmark** supports the following datasets.
+### 1. 데이터셋 다운로드
+**NLU-Benchmark**에서는 다음과 같은 데이터셋들을 지원합니다.
 
-| dataset name | language   | train | dev   | test  | link   |           
-| :----------- | :--------: | :---: | :---: | :---: | :----: |
-| ATIS         | `en`       | ✔     | ✔    | ✔     | [LINK](https://github.com/yuanxiaosc/BERT-for-Sequence-Labeling-and-Text-Classification/tree/master/data/atis_Intent_Detection_and_Slot_Filling)  |
-| SNIPS        | `en`       | ✔     | ✔    | ✔     | [LINK](https://github.com/yuanxiaosc/BERT-for-Sequence-Labeling-and-Text-Classification/tree/master/data/snips_Intent_Detection_and_Slot_Filling)  |
+| 데이터셋 이름 | 언어   | train | dev   | test  | 링크   |           
+| :---------- | :---: | :---: | :---: | :---: | :---: |
+| ATIS        | `en`  | ✔     | ✔    | ✔     | [LINK](https://github.com/yuanxiaosc/BERT-for-Sequence-Labeling-and-Text-Classification/tree/master/data/atis_Intent_Detection_and_Slot_Filling)  |
+| SNIPS       | `en`  | ✔     | ✔    | ✔     | [LINK](https://github.com/yuanxiaosc/BERT-for-Sequence-Labeling-and-Text-Classification/tree/master/data/snips_Intent_Detection_and_Slot_Filling)  |
 
-* After downloading datasets from above links, create a folder having each dataset name under the `data` folder and save downloaded datasets there, e.g., in case of ATIS dataset, save `train`, `valid`, `test` folders in `data/atis`.
+* 데이터셋들을 링크에서 다운로드 받은 후에, `data` 폴더 밑에 각 데이터셋의 이름별 폴더를 생성한 후에 그곳에 다운로드 받은 데이터셋들을 저장합니다. ex) ATIS 데이터셋의 경우, `data/atis` 폴더에 `train`, `valid`, `test`를 저장
 
-* The following files are stored in the folders downloaded through above links.
-    * `seq.in` : utterance sentences are stored.
-    * `label` : intents about each sentences in `seq.in` are saved.
-    * `seq.out` : sequence labels for each sentences in `seq.in` are saved. theses sequence labels follow [BIO Format](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging)).
+* 링크를 통해 다운로드 받은 폴더들에는 다음과 같은 파일들이 저장되어 있습니다.
+    * `seq.in` : 발화 문장들이 저장되어 있습니다.
+    * `label` : `seq.in`에서의 각 문장들에 대한 의도(intent)가 저장되어 있습니다.
+    * `seq.out` : `seq.in`에서의 각 문장들에 대한 Sequence Label들이 저장되어 있습니다. 저장되어 있는 Sequence Label은 [BIO Format](https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_(tagging))을 따릅니다.
 
-### 2. Pre-processing Dataset
-To perform intent classification and entity recognition experiments via **NLU-Benchmark**, you should build label dictionaries about each dataset.
+### 2. 데이터셋 전처리
+**NLU-Benchmark**를 통해 의도 분류 실험과 엔터티 인식 실험을 수행하려면 각 데이터셋의 레이블 사전이 필요합니다. 
 
-If you run the following command, `intent.vocab`. a dictionary about intent labels, and `entity.vocab`, a dictionary about entity labels, are created.
+다음과 같은 명령어를 수행하면 의도 레이블들에 대한 사전인 `intent.vocab`과 엔터티 레이블들에 대한 사전인 `entity.vocab`이 생성됩니다.
 
-* `--data_name` : dataset name to create label dictionary, e.g., `atis`, `snips`
+* `--data_name` : 레이블 사전을 생성하고자 하는 데이터셋 이름 ex) `atis`, `snips`
 
 ```bash
 python data/build_label_vocabs.py --data_name {$DATA_NAME}
 ```
 
 ### 3. Intent Classification : Training and Evaluation
-Run intent classification experiment by the following command:
+다음과 같은 명령을 실행하여 의도 분류 실험을 수행합니다.
 
-* `--model_type` :  type of model, e.g., `bert`, `albert`
-* `--model_name` : checkpoint name of language model you wanna run experiment, e.g., `bert-base-cased`, `albert-base-v2`
-* `--data_name` : dataset name to use training and evaluating, e.g., `atis`, `snips`
-* `--do_train` : set training mode
-* `--do_eval` : set evaluating mode
-* `--num_train_epochs` : number of epochs in training
-* `--gpu_id` : GPU id to be used when performing experiment
-* `--batch_size` : batch size at training
+* `--model_type` : 실험을 수행하고자 하는 언어모델의 타입 ex) `bert`, `albert`
+* `--model_name` : 실험을 수행하고자 하는 언어모델의 체크포인트 이름 ex) `bert-base-cased`, `albert-base-v2`
+* `--data_name` : 실험을 수행하고자 하는 데이터셋 이름 ex) `atis`, `snips`
+* `--do_train` : 학습 수행
+* `--do_eval` : 평가 수행
+* `--num_train_epochs` : 학습시, 에폭 횟수
+* `--gpu_id` : 사용하고자 하는 gpu id
+* `--batch_size` : 배치 크기
 
 ```bash
 python run_intent_classification.py --model_type {$MODEL_TYPE} \
@@ -75,16 +75,16 @@ python run_intent_classification.py --model_type {$MODEL_TYPE} \
 ```
 
 ### 4. Entity Recognition : Training and Evaluation
-Run entity recognition experiment by the following command:
+다음과 같은 명령을 실행하여 엔터티 인식을 수행합니다.
 
-* `--model_type` : type of model, e.g., `bert`, `albert`
-* `--model_name` : checkpoint name of language model you wanna run experiment, e.g., `bert-base-cased`, `albert-base-v2`
-* `--data_name` : dataset name to use training and evaluating, e.g., `atis`, `snips`
-* `--do_train` : set training mode
-* `--do_eval` : set evaluating mode
-* `--num_train_epochs` : number of epochs in training
-* `--gpu_id` : GPU id to be used when performing experiment
-* `--batch_size` : batch size at training
+* `--model_type` : 실험을 수행하고자 하는 언어모델의 타입 ex) `bert`, `albert`
+* `--model_name` : 실험을 수행하고자 하는 언어모델의 체크포인트 이름 ex) `bert-base-cased`, `albert-base-v2`
+* `--data_name` : 실험을 수행하고자 하는 데이터셋 이름 ex) `atis`, `snips`
+* `--do_train` : 학습 수행
+* `--do_eval` : 평가 수행
+* `--num_train_epochs` : 학습시, 에폭 횟수
+* `--gpu_id` : 사용하고자 하는 gpu id
+* `--batch_size` : 배치 크기
 
 ```bash
 python run_entity_recognition.py --model_type {$MODEL_TYPE} \
@@ -98,7 +98,7 @@ python run_entity_recognition.py --model_type {$MODEL_TYPE} \
 ```
 
 ## Result
-Hyper parameters for experiments are as follows:
+실험에 적용한 하이퍼파라미터는 다음과 같습니다.
 
 | Hyper Parameter    | Value                | 
 | :----------------: | :------------------: |
@@ -107,9 +107,9 @@ Hyper parameters for experiments are as follows:
 | `learning_rate`    | 5e-5                 |
 | `num_train_epochs` | 20                   |
 
-* If you look at the experimental results below, you can see that performance of the `large` size models have low performances. I think this problem can be solved by increasing the epoch and batch size.
+* 아래의 실험 결과들을 보시면 전체적으로 `large` 크기의 모델들이 성능이 낮은 것을 확인할 수 있습니다. 이는 epoch과 batch size를 늘림으로써 해결할 수 있을 것으로 생각합니다.
 
-### 1. ATIS Dataset : Intent Classification
+### 1. ATIS 데이터셋 : Intent Classification
 
 | Model Type    | Model Name                                                                                        | Accuracy(%) |
 | :------------ | :------------------------------------------------------------------------------------------------ | :---------: |
@@ -129,7 +129,7 @@ Hyper parameters for experiments are as follows:
 |               | [google/electra-base-discriminator](https://huggingface.co/google/electra-base-discriminator)     | **95.29**   |
 |               | [google/electra-large-discriminator](https://huggingface.co/google/electra-large-discriminator)   | 70.77       |
 
-### 2. ATIS Dataset : Entity Recognition
+### 2. ATIS 데이터셋 : Entity Recognition
 
 | Model Type    | Model Name                                                                                        | Precision(%) | Recall(%)    | F1 Score(%)  |
 | :------------ | :------------------------------------------------------------------------------------------------ | :----------: | :----------: | :----------: |
@@ -149,7 +149,7 @@ Hyper parameters for experiments are as follows:
 |               | [google/electra-base-discriminator](https://huggingface.co/google/electra-base-discriminator)     | **94.72**    | **95.62**    | **95.17**    |
 |               | [google/electra-large-discriminator](https://huggingface.co/google/electra-large-discriminator)   | 94.45        | 95.45        | 94.95        |
 
-### 3. SNIPS Dataset : Intent Classification
+### 3. SNIPS 데이터셋 : Intent Classification
 
 | Model Type    | Model Name                                                                                        | Accuracy(%) |
 | :------------ | :------------------------------------------------------------------------------------------------ | :---------: |
@@ -169,7 +169,7 @@ Hyper parameters for experiments are as follows:
 |               | [google/electra-base-discriminator](https://huggingface.co/google/electra-base-discriminator)     | 96.99       |
 |               | [google/electra-large-discriminator](https://huggingface.co/google/electra-large-discriminator)   | 11.42       |
 
-### 4. SNIPS Dataset : Entity Recognition
+### 4. SNIPS 데이터셋 : Entity Recognition
 
 | Model Type    | Model Name                                                                                        | Precision(%) | Recall(%)    | F1 Score(%)  |
 | :------------ | :------------------------------------------------------------------------------------------------ | :----------: | :----------: | :----------: |
@@ -190,8 +190,8 @@ Hyper parameters for experiments are as follows:
 |               | [google/electra-large-discriminator](https://huggingface.co/google/electra-large-discriminator)   | 92.83        | 94.86        | 93.83        |
 
 ## TODO List
-- [x] README (Version. EN)
-- [ ] add CRF layers
+- [ ] README (Version. EN)
+- [ ] CRF 추가
 
 ## References
 - [yuanxiaosc/BERT-for-Sequence-Labeling-and-Text-Classification](https://github.com/yuanxiaosc/BERT-for-Sequence-Labeling-and-Text-Classification)
@@ -200,4 +200,4 @@ Hyper parameters for experiments are as follows:
 
 ---
 
-If you have any additional questions, please register an issue in this repository or contact sehunhu5247@gmail.com.
+추가적으로 문의 사항이 있으시면 해당 repository의 issue를 등록해주시거나 sehunhu5247@gmail.com으로 문의해주시면 감사하겠습니다.
