@@ -170,7 +170,7 @@ class EntityRecognizer(LightningModule):
         ]
         optimizer = AdamW(optimizer_grouped_parameters, lr=self.hparams.learning_rate, eps=1e-8)
 
-        t_total = len(self.train_dataloader()) // self.trainer.max_epochs
+        t_total = len(self.train_dataloader()) * self.trainer.max_epochs
         scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=t_total)
 
         return [optimizer], [scheduler]
